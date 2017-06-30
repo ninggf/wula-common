@@ -1,0 +1,26 @@
+{
+  "name": "wula/common",
+  "description": "some helper classes and functions from wula",
+  "license": "MIT",
+  "keywords": [
+    "wula",
+  ],
+  "authors": [
+	{
+	  "name": "Leo Ning",
+	  "email": "windywany@gmail.com"
+	}
+  ],
+  "require": {
+	  "php": ">=5.6 || >= 7.1"
+  },
+  "require-dev": {
+	  "phpunit/phpunit": "*"
+  },
+  "autoload": {
+    "files": [
+	    "common.php"
+	  ]
+  },
+  "homepage": "http://www.wulaphp.com/lib-common"
+}
