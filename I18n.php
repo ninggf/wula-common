@@ -46,6 +46,22 @@ namespace wulaphp\i18n {
 		}
 
 		/**
+		 * 取原生字段.
+		 *
+		 * @param string $text
+		 * @param string $domain
+		 *
+		 * @return mixed
+		 */
+		public static function getText($text, $domain = '') {
+			if (isset(self::$languages[ $domain ][ $text ])) {
+				return self::$languages[ $domain ][ $text ];
+			}
+
+			return $text;
+		}
+
+		/**
 		 * 翻译字符.
 		 *
 		 * @param $text
@@ -101,6 +117,14 @@ namespace {
 		$domain = isset($text[1]) ? '@' . $text[1] : '';
 
 		return I18n::translate1($str, $args, $domain);
+	}
+
+	function _tt($text) {
+		$text   = explode('@', $text);
+		$str    = $text[0];
+		$domain = isset($text[1]) ? '@' . $text[1] : '';
+
+		return I18n::getText($str, $domain);
 	}
 
 	function _i18n($file, $ext = '.js') {
