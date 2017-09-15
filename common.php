@@ -25,7 +25,7 @@ function aryget($name, $array, $default = '') {
  */
 function pure_comman_string($string) {
 	if ($string) {
-		return trim(trim(str_replace(array('，', ' ', '　', '-', ';', '；', '－'), ',', $string)), ',');
+		return trim(trim(str_replace(['，', ' ', '　', '-', ';', '；', '－'], ',', $string)), ',');
 	}
 
 	return '';
@@ -122,7 +122,59 @@ function get_status_header_desc($code) {
 	$code = abs(intval($code));
 
 	if (!isset ($output_header_to_desc)) {
-		$output_header_to_desc = array(100 => 'Continue', 101 => 'Switching Protocols', 102 => 'Processing', 200 => 'OK', 201 => 'Created', 202 => 'Accepted', 203 => 'Non-Authoritative Information', 204 => 'No Content', 205 => 'Reset Content', 206 => 'Partial Content', 207 => 'Multi-Status', 226 => 'IM Used', 300 => 'Multiple Choices', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 305 => 'Use Proxy', 306 => 'Reserved', 307 => 'Temporary Redirect', 400 => 'Bad Request', 401 => 'Unauthorized', 402 => 'Payment Required', 403 => 'Forbidden', 404 => 'Page Not Found', 405 => 'Method Not Allowed', 406 => 'Not Acceptable', 407 => 'Proxy Authentication Required', 408 => 'Request Timeout', 409 => 'Conflict', 410 => 'Gone', 411 => 'Length Required', 412 => 'Precondition Failed', 413 => 'Request Entity Too Large', 414 => 'Request-URI Too Long', 415 => 'Unsupported Media Type', 416 => 'Requested Range Not Satisfiable', 417 => 'Expectation Failed', 422 => 'Unprocessable Entity', 423 => 'Locked', 424 => 'Failed Dependency', 426 => 'Upgrade Required', 500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Timeout', 505 => 'HTTP Version Not Supported', 506 => 'Variant Also Negotiates', 507 => 'Insufficient Storage', 510 => 'Not Extended');
+		$output_header_to_desc = [
+			100 => 'Continue',
+			101 => 'Switching Protocols',
+			102 => 'Processing',
+			200 => 'OK',
+			201 => 'Created',
+			202 => 'Accepted',
+			203 => 'Non-Authoritative Information',
+			204 => 'No Content',
+			205 => 'Reset Content',
+			206 => 'Partial Content',
+			207 => 'Multi-Status',
+			226 => 'IM Used',
+			300 => 'Multiple Choices',
+			301 => 'Moved Permanently',
+			302 => 'Found',
+			303 => 'See Other',
+			304 => 'Not Modified',
+			305 => 'Use Proxy',
+			306 => 'Reserved',
+			307 => 'Temporary Redirect',
+			400 => 'Bad Request',
+			401 => 'Unauthorized',
+			402 => 'Payment Required',
+			403 => 'Forbidden',
+			404 => 'Page Not Found',
+			405 => 'Method Not Allowed',
+			406 => 'Not Acceptable',
+			407 => 'Proxy Authentication Required',
+			408 => 'Request Timeout',
+			409 => 'Conflict',
+			410 => 'Gone',
+			411 => 'Length Required',
+			412 => 'Precondition Failed',
+			413 => 'Request Entity Too Large',
+			414 => 'Request-URI Too Long',
+			415 => 'Unsupported Media Type',
+			416 => 'Requested Range Not Satisfiable',
+			417 => 'Expectation Failed',
+			422 => 'Unprocessable Entity',
+			423 => 'Locked',
+			424 => 'Failed Dependency',
+			426 => 'Upgrade Required',
+			500 => 'Internal Server Error',
+			501 => 'Not Implemented',
+			502 => 'Bad Gateway',
+			503 => 'Service Unavailable',
+			504 => 'Gateway Timeout',
+			505 => 'HTTP Version Not Supported',
+			506 => 'Variant Also Negotiates',
+			507 => 'Insufficient Storage',
+			510 => 'Not Extended'
+		];
 	}
 	if (isset ($output_header_to_desc [ $code ])) {
 		return $output_header_to_desc [ $code ];
@@ -147,7 +199,34 @@ function untrailingslashit($string) {
  * @return string
  */
 function sanitize_file_name($filename) {
-	$special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}", chr(0));
+	$special_chars = [
+		"?",
+		"[",
+		"]",
+		"/",
+		"\\",
+		"=",
+		"<",
+		">",
+		":",
+		";",
+		",",
+		"'",
+		"\"",
+		"&",
+		"$",
+		"#",
+		"*",
+		"(",
+		")",
+		"|",
+		"~",
+		"`",
+		"!",
+		"{",
+		"}",
+		chr(0)
+	];
 	$filename      = str_replace($special_chars, '', $filename);
 	$filename      = preg_replace('/[\s-]+/', '-', $filename);
 	$filename      = trim($filename, '.-_');
@@ -155,7 +234,7 @@ function sanitize_file_name($filename) {
 	if (count($parts) <= 2) return $filename;
 	$filename  = array_shift($parts);
 	$extension = array_pop($parts);
-	$mimes     = array('tmp', 'txt', 'jpg', 'gif', 'png', 'rar', 'zip', 'gzip', 'ppt');
+	$mimes     = ['tmp', 'txt', 'jpg', 'gif', 'png', 'rar', 'zip', 'gzip', 'ppt'];
 	foreach (( array )$parts as $part) {
 		$filename .= '.' . $part;
 		if (preg_match('/^[a-zA-Z]{2,5}\d?$/', $part)) {
@@ -231,14 +310,14 @@ function unique_filename($dir, $filename, $unique_filename_callback = null) {
  *
  * @return array 查找到的文件
  */
-function find_files($dir = '.', $pattern = '', $excludes = array(), $recursive = 0, $stop = 0) {
-	$files = array();
+function find_files($dir = '.', $pattern = '', $excludes = [], $recursive = 0, $stop = 0) {
+	$files = [];
 	$dir   = trailingslashit($dir);
 	if (is_dir($dir)) {
 		$fhd = @opendir($dir);
 		if ($fhd) {
-			$excludes  = is_array($excludes) ? $excludes : array();
-			$_excludes = array_merge($excludes, array('.', '..'));
+			$excludes  = is_array($excludes) ? $excludes : [];
+			$_excludes = array_merge($excludes, ['.', '..']);
 			while (($file = readdir($fhd)) !== false) {
 				if ($recursive && is_dir($dir . $file) && !in_array($file, $_excludes)) {
 					if ($stop == 0 || $recursive <= $stop) {
@@ -294,12 +373,12 @@ function rmdirs($dir, $keep = true) {
  *
  * @return string
  */
-function keepargs($url, $include = array()) {
+function keepargs($url, $include = []) {
 	$urls = explode('?', $url);
 	if (count($urls) < 2) {
 		return $url;
 	}
-	$kargs = array();
+	$kargs = [];
 	foreach ($include as $arg) {
 		if (preg_match('/' . $arg . '=([^&]+)/', $urls [1], $m)) {
 			$kargs [] = $m [0];
@@ -322,11 +401,11 @@ function keepargs($url, $include = array()) {
  *
  * @return string
  */
-function unkeepargs($url, $exclude = array()) {
-	$regex = array();
-	$rpm   = array();
+function unkeepargs($url, $exclude = []) {
+	$regex = [];
+	$rpm   = [];
 	if (is_string($exclude)) {
-		$exclude = array($exclude);
+		$exclude = [$exclude];
 	}
 	foreach ($exclude as $ex) {
 		$regex [] = '/&?' . $ex . '=[^&]*/';
@@ -383,10 +462,10 @@ function sess_del($name, $default = '') {
  */
 function safe_ids($ids, $sp = ',', $array = false) {
 	if (empty ($ids)) {
-		return $array ? array() : '';
+		return $array ? [] : '';
 	}
 	$_ids = explode($sp, $ids);
-	$ids  = array();
+	$ids  = [];
 	foreach ($_ids as $id) {
 		if (preg_match('/^[1-9]\d*$/', $id)) {
 			$ids [] = intval($id);
@@ -395,7 +474,7 @@ function safe_ids($ids, $sp = ',', $array = false) {
 	if ($array === false) {
 		return empty ($ids) ? '' : implode($sp, $ids);
 	} else {
-		return empty ($ids) ? array() : $ids;
+		return empty ($ids) ? [] : $ids;
 	}
 }
 
@@ -444,7 +523,7 @@ function readable_num($size) {
 	}
 }
 
-function readable_date($sec, $text = array('s' => '秒', 'm' => '分', 'h' => '小时', 'd' => '天')) {
+function readable_date($sec, $text = ['s' => '秒', 'm' => '分', 'h' => '小时', 'd' => '天']) {
 	$size = intval($sec);
 	if ($size == 0) {
 		return '';
@@ -520,7 +599,7 @@ function ary_kv_concat(array $ary, $concat = '=', $quote = true, $sep = ' ') {
 		return '';
 	}
 	$quote   = $quote ? '"' : '';
-	$tmp_ary = array();
+	$tmp_ary = [];
 	foreach ($ary as $name => $val) {
 		$name       = trim($name);
 		$tmp_ary [] = $name . $concat . "{$quote}{$val}{$quote}";
@@ -585,7 +664,7 @@ function rand_str($len = 8, $chars = "a-z,0-9,$,_,!,@,#,=,~,$,%,^,&,*,(,),+,?,:,
 
 	// 生成随机字符串
 	mt_srand(( double )microtime() * 1000000);
-	$code = array();
+	$code = [];
 	$i    = 0;
 	while ($i < $len) {
 		$index   = mt_rand(0, count($array_allow) - 1);
@@ -623,7 +702,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
 	$result = '';
 	$box    = range(0, 255);
 
-	$rndkey = array();
+	$rndkey = [];
 	for ($i = 0; $i <= 255; $i++) {
 		$rndkey [ $i ] = ord($cryptkey [ $i % $key_length ]);
 	}
@@ -662,7 +741,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
  * @return array array(min,minop,max,maxop)
  */
 function parse_version_pair($versions) {
-	$rst = array(false, '', false, '');
+	$rst = [false, '', false, ''];
 	if (preg_match('#^([\[\(])(.*?),(.*?)([\]\)])$#', $versions, $m)) {
 		if ($m [2]) {
 			$rst [0] = $m [2];
@@ -694,21 +773,39 @@ function parse_version_pair($versions) {
  * @since 1.0.3
  */
 function get_then_unset(&$ary) {
-	$rtnAry = array();
+	$rtnAry = [];
 	$cnt    = func_num_args();
 	if (is_array($ary) && $ary && $cnt > 1) {
 		for ($i = 1; $i < $cnt; $i++) {
 			$arg = func_get_arg($i);
 			if (isset ($ary [ $arg ])) {
-				$rtnAry [] = $ary [ $arg ];
+				$rtnAry [ $arg ] = $ary [ $arg ];
 				unset ($ary [ $arg ]);
 			} else {
-				$rtnAry [] = '';
+				$rtnAry [ $arg ] = '';
 			}
 		}
 	}
 
 	return $rtnAry;
+}
+
+/**
+ * 从$ary中获取$key对应的值并将其从$ary中删除.
+ *
+ * @param array      $ary
+ * @param string|int $key
+ *
+ * @return mixed
+ */
+function unget(&$ary, $key) {
+	$v = null;
+	if (isset($ary[ $key ])) {
+		$v = $ary[ $key ];
+		unset($ary[ $key ]);
+	}
+
+	return $v;
 }
 
 function html_escape($string, $esc_type = 'html', $char_set = null, $double_encode = true) {
@@ -746,7 +843,14 @@ function html_escape($string, $esc_type = 'html', $char_set = null, $double_enco
 
 		case 'javascript' :
 			// escape quotes and backslashes, newlines, etc.
-			return strtr($string, array('\\' => '\\\\', "'" => "\\'", '"' => '\\"', "\r" => '\\r', "\n" => '\\n', '</' => '<\/'));
+			return strtr($string, [
+				'\\' => '\\\\',
+				"'"  => "\\'",
+				'"'  => '\\"',
+				"\r" => '\\r',
+				"\n" => '\\n',
+				'</' => '<\/'
+			]);
 
 		default :
 			return $string;
@@ -872,7 +976,7 @@ function inner_str($str, $str1, $str2, $include_str1 = true) {
  * @return string
  */
 function cleanhtml2simple($text) {
-	$text = str_ireplace(array('[page]', ' ', '　', "\t", "\r", "\n", '&nbsp;'), '', $text);
+	$text = str_ireplace(['[page]', ' ', '　', "\t", "\r", "\n", '&nbsp;'], '', $text);
 	$text = preg_replace('#</?[a-z0-9][^>]*?>#umsi', '', $text);
 
 	return $text;
