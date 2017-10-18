@@ -80,6 +80,15 @@ function thefilename($filename) {
 	return $filename;
 }
 
+function the_media_src($url) {
+	if (preg_match('#^(/|https?://).+$#', $url)) {
+		return $url;
+	}
+	$medias = apply_filter('get_media_domains', [WWWROOT_DIR]);
+
+	return trailingslashit($medias[ array_rand($medias) ]) . $url;
+}
+
 /**
  * Set HTTP status header.
  *
@@ -267,17 +276,18 @@ function unique_filename($dir, $filename, $unique_filename_callback = null) {
 	$filename = sanitize_file_name($filename);
 	$info     = pathinfo($filename);
 	$ext      = !empty ($info ['extension']) ? '.' . $info ['extension'] : '';
-	$name     = basename($filename, $ext);
+	$name     = $info['filename'];
 	if ($name === $ext) {
 		$name = '';
 	}
 	if ($unique_filename_callback && is_callable($unique_filename_callback)) {
 		$filename = $unique_filename_callback ($dir, $name);
 	} else {
-		$number = 0;
+		$number = '';
 		if ($ext && strtolower($ext) != $ext) {
 			$ext2      = strtolower($ext);
 			$filename2 = preg_replace('|' . preg_quote($ext) . '$|', $ext2, $filename);
+
 			while (file_exists($dir . "/$filename") || file_exists($dir . "/$filename2")) {
 				$new_number = $number + 1;
 				$filename   = str_replace("$number$ext", "$new_number$ext", $filename);
