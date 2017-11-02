@@ -801,6 +801,30 @@ function get_then_unset(&$ary) {
 }
 
 /**
+ * 从数据$ary取数据.
+ *
+ * @param array $ary
+ * @param array $name 要取出来的数据
+ *
+ * @return array
+ * @since 1.0.3
+ */
+function get_for_list($ary, ...$name) {
+	$rtnAry = [];
+	if (is_array($ary) && $ary && $name) {
+		foreach ($name as $arg) {
+			if (isset ($ary [ $arg ])) {
+				$rtnAry [] = $ary [ $arg ];
+			} else {
+				$rtnAry [] = '';
+			}
+		}
+	}
+
+	return $rtnAry;
+}
+
+/**
  * 从$ary中获取$key对应的值并将其从$ary中删除.
  *
  * @param array      $ary
