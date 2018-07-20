@@ -283,7 +283,7 @@ function unique_filename($dir, $filename, $unique_filename_callback = null) {
 	if ($unique_filename_callback && is_callable($unique_filename_callback)) {
 		$filename = $unique_filename_callback ($dir, $name);
 	} else {
-		$number = '';
+		$number = 0;
 		if ($ext && strtolower($ext) != $ext) {
 			$ext2      = strtolower($ext);
 			$filename2 = preg_replace('|' . preg_quote($ext) . '$|', $ext2, $filename);

@@ -17,8 +17,8 @@ namespace wulaphp\i18n {
 		public static function addLang($dir) {
 			$lang = defined('LANGUAGE') ? LANGUAGE : 'en';
 			$lf   = $dir . DIRECTORY_SEPARATOR . $lang . '.php';
-			if (!is_file($lf) && strpos($lang, '-', 1)) {
-				$lf = $dir . DIRECTORY_SEPARATOR . substr($lang, 0, 2) . '.php';
+			if (!is_file($lf) && ($pos = strpos($lang, '-', 1))) {
+				$lf = $dir . DIRECTORY_SEPARATOR . substr($lang, 0, $pos) . '.php';
 			}
 			if (is_file($lf)) {
 				$language = @include $lf;
@@ -134,8 +134,8 @@ namespace {
 		$lang = defined('LANGUAGE') ? LANGUAGE : 'en';
 		$rf   = substr($file, strlen(WWWROOT_DIR));
 		$ext  = strtolower($ext);
-		if (!is_file(WWWROOT . $rf . DS . $lang . $ext) && strpos($lang, '-', 1)) {
-			$lang = substr($lang, 0, 2);
+		if (!is_file(WWWROOT . $rf . DS . $lang . $ext) && ($pos = strpos($lang, '-', 1))) {
+			$lang = substr($lang, 0, $pos);
 		}
 		if (is_file(WWWROOT . $rf . DS . $lang . $ext)) {
 			if ($ext == '.js') {
@@ -145,9 +145,15 @@ namespace {
 			} else {
 				return "{$file}/{$lang}{$ext}";
 			}
+		} else {
+			if ($ext == '.js') {
+				return "<script type=\"text/javascript\" src=\"{$file}_{$lang}{$ext}\"></script>";
+			} else if ($ext == '.css') {
+				return "<link rel=\"stylesheet\" href=\"{$file}_{$lang}{$ext}\"/>";
+			} else {
+				return "{$file}_{$lang}{$ext}";
+			}
 		}
-
-		return '';
 	}
 
 	// 翻译
