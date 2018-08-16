@@ -668,7 +668,7 @@ function rand_str($len = 8, $chars = "a-z,0-9,$,_,!,@,#,=,~,$,%,^,&,*,(,),+,?,:,
 				$array_allow [] = chr($j);
 			}
 		} else {
-			$array_allow [] = $array_allow [ $i ];
+			$array_allow [] = $characters [ $i ];
 		}
 	}
 
