@@ -8,7 +8,7 @@
  *
  * @return mixed
  */
-function aryget($name, $array, $default = '') {
+function aryget($name, array $array, $default = '') {
     if (isset ($array [ $name ])) {
         return $array [ $name ];
     }
@@ -80,6 +80,13 @@ function thefilename($filename) {
     return $filename;
 }
 
+/**
+ * 媒体文件URL.
+ *
+ * @param string $url
+ *
+ * @return string
+ */
 function the_media_src($url) {
     if (preg_match('#^(/|https?://).+$#', $url)) {
         return $url;
@@ -192,10 +199,24 @@ function get_status_header_desc($code) {
     }
 }
 
+/**
+ * 确保字符以'/'结尾.
+ *
+ * @param string $string
+ *
+ * @return string
+ */
 function trailingslashit($string) {
     return untrailingslashit($string) . '/';
 }
 
+/**
+ * 去除字符尾部'/'与'\'字符.
+ *
+ * @param string $string
+ *
+ * @return string
+ */
 function untrailingslashit($string) {
     return rtrim($string, '/\\');
 }
@@ -520,6 +541,13 @@ function readable_size($size) {
     }
 }
 
+/**
+ * 可读数字.
+ *
+ * @param int $size
+ *
+ * @return int|string
+ */
 function readable_num($size) {
     $size = intval($size);
     if ($size < 1000) {
@@ -533,6 +561,14 @@ function readable_num($size) {
     }
 }
 
+/**
+ * 用户友好日期
+ *
+ * @param int   $sec
+ * @param array $text
+ *
+ * @return string
+ */
 function readable_date($sec, $text = ['s' => '秒', 'm' => '分', 'h' => '小时', 'd' => '天']) {
     $size = intval($sec);
     if ($size == 0) {
@@ -567,6 +603,11 @@ function array_merge2($base, $arr) {
     return array_merge($base, $arr);
 }
 
+/**
+ * 获取QUERY_STRING.
+ *
+ * @return string
+ */
 function get_query_string() {
     $query_str = $_SERVER ['QUERY_STRING'];
     if ($query_str) {
@@ -586,7 +627,10 @@ function get_query_string() {
  *
  * @return string
  */
-function url_append_args($url, $args) {
+function url_append_args($url, $args = []) {
+    if (empty($args)) {
+        return $url;
+    }
     if (strpos($url, '?') === false) {
         return $url . '?' . http_build_query($args);
     } else {
@@ -745,6 +789,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
 }
 
 /**
+ * 解析版本号.
  *
  * @param string $versions format:[(min,max)]
  *
@@ -777,17 +822,16 @@ function parse_version_pair($versions) {
 /**
  * 从数据$ary取数据并把它从原数组中删除.
  *
- * @param array $ary
+ * @param array  $ary
+ * @param string ...$keys
  *
  * @return array
  * @since 1.0.3
  */
-function get_then_unset(&$ary) {
+function get_then_unset(&$ary, ...$keys) {
     $rtnAry = [];
-    $cnt    = func_num_args();
-    if (is_array($ary) && $ary && $cnt > 1) {
-        for ($i = 1; $i < $cnt; $i++) {
-            $arg = func_get_arg($i);
+    if (is_array($ary) && $ary && $keys > 1) {
+        foreach ($keys as $arg) {
             if (isset ($ary [ $arg ])) {
                 $rtnAry [ $arg ] = $ary [ $arg ];
                 unset ($ary [ $arg ]);
@@ -842,8 +886,17 @@ function unget(&$ary, $key) {
     return $v;
 }
 
+/**
+ * 转义HTML字符.
+ *
+ * @param string $string
+ * @param string $esc_type
+ * @param null   $char_set
+ * @param bool   $double_encode
+ *
+ * @return mixed|null|string|string[]
+ */
 function html_escape($string, $esc_type = 'html', $char_set = null, $double_encode = true) {
-
     if (!$char_set) {
         $char_set = 'UTF-8';
     }
@@ -1028,3 +1081,4 @@ function throw_exception($message) {
 }
 
 include __DIR__ . '/I18n.php';
+// end of common.php
