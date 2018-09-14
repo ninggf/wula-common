@@ -46,7 +46,9 @@ namespace wulaphp\i18n {
          */
         public static function translate1($text, array $args = [], $domain = '') {
             if ($domain) {
-                return @vsprintf(self::$languages[ $domain ][ $text ], $args);
+                if (isset(self::$languages[ $domain ][ $text ])) {
+                    return @vsprintf(self::$languages[ $domain ][ $text ], $args);
+                }
             } else if (isset(self::$languages[ $text ])) {
                 return @vsprintf(self::$languages[ $text ], $args);
             }
