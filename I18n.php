@@ -172,10 +172,16 @@ namespace {
      *
      * @return string
      */
-    function _i18n($file, $ext = '.js') {
+    function _i18n($file, $ext = '') {
         if (!$file) {
             return '';
         }
+
+        if (!$ext) {
+            $ext  = strrchr($file, '.');
+            $file = substr($file, 0, strlen($file) - strlen($ext));
+        }
+
         $lang = defined('LANGUAGE') ? LANGUAGE : 'en';
         $rf   = substr($file, strlen(WWWROOT_DIR));
         $ext  = strtolower($ext);
@@ -225,7 +231,7 @@ namespace {
 
     // 加载语言相关资源使用
     function smarty_modifiercompiler_i18n($params) {
-        $ext = isset($params[1]) ? $params[1] : "'.js'";
+        $ext = isset($params[1]) ? $params[1] : "''";
 
         return "_i18n({$params[0]},$ext)";
     }
