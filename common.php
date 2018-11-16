@@ -25,7 +25,12 @@ function aryget($name, array $array, $default = '') {
  */
 function pure_comman_string($string) {
     if ($string) {
-        return trim(trim(str_replace(['，', ' ', '　', '-', ';', '；', '－'], ',', $string)), ',');
+        $string = trim(trim(str_replace(['，', ' ', '　', '-', ';', '；', '－'], ',', $string)), ',');
+        if ($string) {
+            $strings = explode(',', $string);
+
+            return implode(',', array_filter($strings));
+        }
     }
 
     return '';
@@ -88,7 +93,7 @@ function thefilename($filename) {
  * @return string
  */
 function the_media_src($url) {
-    if (preg_match('#^(/|https?://).+$#', $url)) {
+    if (!$url || preg_match('#^(/|https?://).+$#', $url)) {
         return $url;
     }
     $medias = apply_filter('get_media_domains', [WWWROOT_DIR]);
