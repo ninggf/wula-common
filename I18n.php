@@ -36,6 +36,15 @@ namespace wulaphp\i18n {
         }
 
         /**
+         * 获取所有翻译.
+         *
+         * @return array
+         */
+        public static function getTranslates() {
+            return self::$languages;
+        }
+
+        /**
          * 基于域进行翻译.
          *
          * @param string $text
