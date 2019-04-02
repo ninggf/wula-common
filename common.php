@@ -104,9 +104,9 @@ function the_media_src($url) {
 /**
  * Set HTTP status header.
  *
- * @since 1.0
- *
  * @param int $header HTTP status code
+ *
+ * @since 1.0
  *
  */
 function status_header($header) {
@@ -131,11 +131,11 @@ function status_header($header) {
 /**
  * Retrieve the description for the HTTP status.
  *
- * @since 1.0
- *
  * @param int $code HTTP status code.
  *
  * @return string Empty string if not found, or description if found.
+ * @since 1.0
+ *
  */
 function get_status_header_desc($code) {
     global $output_header_to_desc;
@@ -627,19 +627,29 @@ function get_query_string() {
 /**
  * 为url添加参数。
  *
- * @param string $url
- * @param array  $args
+ * @param string $url     url
+ * @param array  $args    要添加的参数
+ * @param bool   $replace 是否替换原有的参数
  *
  * @return string
  */
-function url_append_args($url, $args = []) {
+function url_append_args($url, $args = [], $replace = true) {
     if (empty($args)) {
         return $url;
     }
     if (strpos($url, '?') === false) {
         return $url . '?' . http_build_query($args);
     } else {
-        return $url . '&' . http_build_query($args);
+        $urls = explode('?', $url);
+        if (isset($urls[1])) {
+            @parse_str($urls[1], $oargs);
+            if ($oargs) {
+                $args = $replace ? array_merge($oargs, $args) : array_merge($args, $oargs);
+                ksort($args);
+            }
+        }
+
+        return $urls[0] . '?' . http_build_query($args);
     }
 }
 
